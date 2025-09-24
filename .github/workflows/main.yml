@@ -9,3 +9,9 @@ jobs:
     steps:
     - run: echo "🎉 This job uses runner scale set runners!"
     - run: uname -r && cat /etc/os-release
+    - name: Key Vault Explorer
+      uses: ikumi9/azure-keyvault-action@v1
+      with:     
+       keyvault: github-actions-openshift
+       secret: secret-in-vault
+          
