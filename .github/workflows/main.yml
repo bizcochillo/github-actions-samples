@@ -8,10 +8,6 @@ jobs:
     runs-on: arc-runner-set-openshift
     steps:
     - run: echo "🎉 This job uses runner scale set runners!"
-    - run: uname -r && cat /etc/os-release
-    - name: Key Vault Explorer
-      uses: ikumi9/azure-keyvault-action@v1
-      with:     
-       keyvault: github-actions-openshift
-       secret: secret-in-vault
-          
+    - run: cat /etc/os-release
+    - run: apt install -y curl && curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+    #- run: az keyvault secret show --name secret-in-vault --vault-name github-actions-openshift --query "value"    
