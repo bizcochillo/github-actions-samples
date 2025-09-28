@@ -8,6 +8,5 @@ jobs:
     runs-on: ghr-ss-basic
     steps:
     - run: echo "🎉 This job uses runner scale set runners(basic)!"
-    - run: cat /etc/os-release
-    - run: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-      name: Install Azure CLI  
+    - run: cat /etc/os-release && echo "---" && arch
+      name: Information about runner
