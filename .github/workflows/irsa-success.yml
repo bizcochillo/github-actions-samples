@@ -10,10 +10,5 @@ jobs:
     - run: echo "--- AGENT INFORMATION ---" && cat /etc/os-release && echo "---" && echo "--- ARCHITECTURE ---" && arch
       name: Information about runner
     - run: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && sudo ./aws/install && aws --version
-    - run: aws secretsmanager get-secret-value \
-               --secret-id github-sample \
-               --region eu-central-1 \
-               --no-cli-pager \
-               --query SecretString \
-               --output text
+    - run: aws secretsmanager get-secret-value --secret-id github-sample --region eu-central-1 --no-cli-pager --query SecretString --output text
 
