@@ -1,4 +1,4 @@
-name: Actions Runner Controller Demo
+name: Actions Runner Controller (restricted SCC)
 on:
   workflow_dispatch:
 
