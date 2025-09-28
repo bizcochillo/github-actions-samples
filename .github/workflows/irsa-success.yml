@@ -1,4 +1,4 @@
-name: ARC sample (restricted SCC) - success
+name: ARC sample (IRSA) - success
 on:
   workflow_dispatch:
 
