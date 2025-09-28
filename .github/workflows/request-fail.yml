@@ -9,6 +9,6 @@ jobs:
     - run: echo "🎉 This job uses runner scale set runners(request limited)!"
     - run: echo "--- AGENT INFORMATION ---" && cat /etc/os-release && echo "---" && echo "--- ARCHITECTURE ---" && arch
       name: Information about runner
-    - run: stress --vm 1 --vm-bytes 300M --timeout 60
+    - run: sudo apt install stress && stress --version
       name: Allocate 300MB (should break the container)
 
