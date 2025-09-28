@@ -1,0 +1,11 @@
+name: ARC sample (requests) - fail
+on:
+  workflow_dispatch:
+
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ghr-ss-requests
+    steps:
+    - run: echo "🎉 This job uses runner scale set runners(basic)!"
+    - run: echo "--- AGENT INFORMATION ---" && cat /etc/os-release && echo "---" && echo "--- ARCHITECTURE ---" && arch
+      name: Information about runner
