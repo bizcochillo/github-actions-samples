@@ -11,6 +11,6 @@ jobs:
       name: Information about runner
     - run: sudo apt update && sudo apt install -y stress
       name: Install stress tool 
-    - run: stress --vm 1 --vm-bytes 300M --timeout 60
-      name: Allocate 300MB (should break the container)
+    #- run: stress --vm 1 --vm-bytes 300M --timeout 60
+    #  name: Allocate 300MB (should break the container)
 
