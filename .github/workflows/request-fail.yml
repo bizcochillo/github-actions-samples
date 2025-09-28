@@ -12,5 +12,5 @@ jobs:
     - run: sudo apt update && sudo apt install -y stress
       name: Install stress tool 
     - run: stress --vm 1 --vm-bytes 300M --timeout 60
-      name: Allocate 300MB  (should not work, even not reach see this task executed in the GUI)
+      name: Allocate 300MB  (It should not work, and the task should not even appear as executed in the GUI)
 
