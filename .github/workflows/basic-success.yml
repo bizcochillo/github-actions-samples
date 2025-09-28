@@ -1,12 +1,11 @@
-name: Actions Runner Controller (restricted SCC)
+name: ARC sample (restricted SCC) - success
 on:
   workflow_dispatch:
 
 jobs:
   Explore-GitHub-Actions:
-    # You need to use the INSTALLATION_NAME from the previous step
     runs-on: ghr-ss-basic
     steps:
     - run: echo "🎉 This job uses runner scale set runners(basic)!"
-    - run: cat /etc/os-release && echo "---" && arch
+    - run: echo "--- AGENT INFORMATION ---" && cat /etc/os-release && echo "---" && echo "--- ARCHITECTURE ---" && arch
       name: Information about runner
