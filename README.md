@@ -54,9 +54,7 @@ spec:
       buildArgs:
         # This must be set to 'x86_64' or 'arm64'.
         - name: TARGET_PLATFORM
-          value: "x86_64"
-        - name: BUILD_TAG
-          value: "runner-x64"
+          value: "x86_64"        
   source:
     type: Git
     git:      
@@ -66,7 +64,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag      
-      name: 'github-runner:${BUILD_TAG}'
+      name: 'github-runner:runner-x86-64'
   nodeSelector:
     kubernetes.io/arch: amd64 
   runPolicy: Serial
@@ -86,10 +84,8 @@ spec:
     dockerStrategy:      
       buildArgs:
         # This must be set to 'x86_64' or 'arm64'.
-        - name: TARGET_ARCH
+        - name: TARGET_PLATFORM
           value: "arm64"
-        - name: BUILD_TAG
-          value: "runner-arm64"
   source:
     type: Git
     git:      
@@ -99,7 +95,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag      
-      name: 'github-runner:${BUILD_TAG}'     
+      name: 'github-runner:runner-arm64'     
   nodeSelector:
     kubernetes.io/arch: arm64
   runPolicy: Serial
