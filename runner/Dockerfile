@@ -32,20 +32,24 @@ RUN export ARCH=$(echo ${TARGET_PLATFORM} | cut -d / -f2) \
 RUN dnf install -y \
         unzip \
         golang \
+        git \
+        jq \
         https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 RUN dnf install -y \
         stress --nogpgcheck
+
+# Install helm using the in-line curl to bash method
+RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+# Use an install script to install the `gh` cli, more about that below!
+COPY images/software/gh-cli.sh gh-cli.sh
+RUN yum-config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+RUN yum install -y gh
 
 RUN if [ "$TARGET_PLATFORM" = "arm64" ]; then export ARCH_AWS=aarch64; else export ARCH_AWS=x86_64 ; fi \    
     && curl https://awscli.amazonaws.com/awscli-exe-linux-${ARCH_AWS}.zip -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     && ./aws/install
-    
-
-#RUN curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz && \
-#    tar -xzf openshift-client-linux.tar.gz && \
-#    mv oc kubectl /usr/local/bin/ && \
-#    rm -f openshift-client-linux.tar.gz README.md
 
 RUN echo "--- Installing OC and KubeCTL CLI (Multi-Arch) ---" \    
     && OC_ARCH_FILE="openshift-client-linux.tar.gz" \
