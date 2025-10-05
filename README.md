@@ -11,6 +11,85 @@ This article details the secure and robust deployment of the GitHub Actions Runn
 
 **Observability**: Enabling Prometheus metrics support within ARC and configuring the necessary OpenShift objects to integrate with the built-in User-Workload Monitoring instance.
 
+# Base images for runners setup
+## Create an ARM Machine pool for Graviton instances
+```bash
+export CLUSTER_ID=_YOUR_CLUSTER_ID_HERE_
+rosa create machinepool \
+    --cluster=$CLUSTER_ID \
+    --name=graviton-pool \
+    --instance-type=m6g.xlarge \
+    --replicas=1 \
+    --labels="node-type=graviton" \
+    --taints="arch=x86_64:NoExecute"
+```
+
+```yaml
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: runner-x64
+  namespace: arc-systems
+  labels:
+    app: github-arc-runner
+spec:  
+  strategy:
+    type: Docker
+    dockerStrategy:      
+      buildArgs:
+        # This must be set to 'x86_64' or 'arm64'.
+        - name: TARGET_PLATFORM
+          value: "x86_64"
+        - name: BUILD_TAG
+          value: "runner-x64"
+  source:
+    type: Git
+    git:      
+      uri: 'https://github.com/bizcochillo/github-actions-samples'
+      ref: 'feature/initial-documentation'    
+    contextDir: 'runner'
+  output:
+    to:
+      kind: ImageStreamTag      
+      name: 'github-runner:${BUILD_TAG}'     
+    nodeSelector:
+      kubernetes.io/arch: amd64
+  runPolicy: Serial
+```
+
+```yaml
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: runner-arm64
+  namespace: arc-systems
+  labels:
+    app: github-arc-runner
+spec:  
+  strategy:
+    type: Docker
+    dockerStrategy:      
+      buildArgs:
+        # This must be set to 'x86_64' or 'arm64'.
+        - name: TARGET_ARCH
+          value: "arm64"
+        - name: BUILD_TAG
+          value: "runner-arm64"
+  source:
+    type: Git
+    git:      
+      uri: 'https://github.com/bizcochillo/github-actions-samples'
+      ref: 'feature/initial-documentation'    
+    contextDir: 'runner'
+  output:
+    to:
+      kind: ImageStreamTag      
+      name: 'github-runner:${BUILD_TAG}'     
+    nodeSelector:
+      kubernetes.io/arch: arm64
+  runPolicy: Serial
+```
+
 # Install GitHub Actions Runner Controller (ARC)
 We begin by installing the official GitHub Actions Runner Controller (ARC) using its Helm chart into the dedicated management namespace, `arc-systems`.
 ```bash

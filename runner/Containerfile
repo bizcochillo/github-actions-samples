@@ -1,5 +1,33 @@
-FROM registry.access.redhat.com/ubi10/ubi
+FROM registry.access.redhat.com/ubi9/ubi
 
+ARG TARGET_PLATFORM
+ARG RUNNER_VERSION=2.328.0
+ARG RUNNER_CONTAINER_HOOKS_VERSION=0.7.0
+
+# The UID env var should be used in child Containerfile.
+ENV UID=1000
+ENV GID=0
+ENV USERNAME="runner"
+
+# This is to mimic the OpenShift behaviour of adding the dynamic user to group 0.
+RUN useradd -G 0 $USERNAME
+ENV HOME /home/${USERNAME}
+
+# Make and set the working directory
+RUN mkdir -p /home/runner \
+    && chown -R $USERNAME:$GID /home/runner
+WORKDIR /home/runner
+
+# Runner download supports amd64 as x64
+RUN export ARCH=$(echo ${TARGET_PLATFORM} | cut -d / -f2) \
+    && if [ "$ARCH" = "amd64" ]; then export ARCH=x64 ; fi \
+    && curl -L -o runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${ARCH}-${RUNNER_VERSION}.tar.gz \
+    && tar xzf ./runner.tar.gz \
+    && rm runner.tar.gz \
+    && ./bin/installdependencies.sh \
+    && dnf clean all
+
+# Software installation
 RUN dnf install -y \
         unzip \
         golang \
@@ -7,11 +35,27 @@ RUN dnf install -y \
 RUN dnf install -y \
         stress --nogpgcheck
 
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
-    unzip awscliv2.zip && \
-    ./aws/install
+RUN if [ "$TARGET_PLATFORM" = "arm64" ]; then export ARCH_AWS=aarch64; else export ARCH_AWS=x86_64 ; fi \    
+    && curl https://awscli.amazonaws.com/awscli-exe-linux-${ARCH_AWS}.zip -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install
+    
 
-RUN curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz && \
-    tar -xzf openshift-client-linux.tar.gz && \
-    mv oc kubectl /usr/local/bin/ && \
-    rm -f openshift-client-linux.tar.gz README.md
+#RUN curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz && \
+#    tar -xzf openshift-client-linux.tar.gz && \
+#    mv oc kubectl /usr/local/bin/ && \
+#    rm -f openshift-client-linux.tar.gz README.md
+
+RUN echo "--- Installing OC and KubeCTL CLI (Multi-Arch) ---" \
+    && ARCH=$(uname -m) \
+    && OC_ARCH_FILE="openshift-client-linux.tar.gz" \
+    && if [ "$ARCH" = "aarch64" ]; then OC_ARCH_FILE="openshift-client-linux-arm64.tar.gz"; fi \
+    && curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/$OC_ARCH_FILE \
+    && tar -xzf $OC_ARCH_FILE \
+    && mv oc kubectl /usr/local/bin/ \
+    && rm -f $OC_ARCH_FILE README.md
+
+RUN echo "--- Final Cleanup and Lock Down ---" \
+    && dnf clean all \
+    && rm -f /usr/bin/dnf /usr/bin/yum \
+    && rm -rf /var/cache/dnf /var/cache/yum
