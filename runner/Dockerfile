@@ -39,7 +39,7 @@ RUN dnf install -y \
         jq \
         https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 RUN dnf install -y \
-        stress --nogpgcheck
+        stress dnf-utils --nogpgcheck
 
 # Install helm using the in-line curl to bash method
 RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
