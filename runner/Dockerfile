@@ -46,10 +46,9 @@ RUN if [ "$TARGET_PLATFORM" = "arm64" ]; then export ARCH_AWS=aarch64; else expo
 #    mv oc kubectl /usr/local/bin/ && \
 #    rm -f openshift-client-linux.tar.gz README.md
 
-RUN echo "--- Installing OC and KubeCTL CLI (Multi-Arch) ---" \
-    && ARCH=$(uname -m) \
+RUN echo "--- Installing OC and KubeCTL CLI (Multi-Arch) ---" \    
     && OC_ARCH_FILE="openshift-client-linux.tar.gz" \
-    && if [ "$ARCH" = "aarch64" ]; then OC_ARCH_FILE="openshift-client-linux-arm64.tar.gz"; fi \
+    && if [ "$TARGET_PLATFORM" = "arm64" ]; then OC_ARCH_FILE="openshift-client-linux-arm64.tar.gz"; fi \
     && curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/$OC_ARCH_FILE \
     && tar -xzf $OC_ARCH_FILE \
     && mv oc kubectl /usr/local/bin/ \
