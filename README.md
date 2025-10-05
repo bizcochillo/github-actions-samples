@@ -24,6 +24,34 @@ rosa create machinepool \
     --taints="arch=x86_64:NoExecute"
 ```
 
+## Create ImageStreams in the arc-systems namespace
+
+- For x86-64 systems: 
+```yaml
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:  
+  name: runner-x64
+  namespace: arc-systems
+spec:
+  lookupPolicy:
+    local: false
+```
+
+- For ARM systems: 
+```yaml
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:  
+  name: runner-x64
+  namespace: arc-systems
+spec:
+  lookupPolicy:
+    local: false
+```
+
+## Create BuildConfig objects for the runner ContainerFile
+
 ```yaml
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
