@@ -51,9 +51,9 @@ spec:
   output:
     to:
       kind: ImageStreamTag      
-      name: 'github-runner:${BUILD_TAG}'     
-    nodeSelector:
-      kubernetes.io/arch: amd64
+      name: 'github-runner:${BUILD_TAG}'
+  nodeSelector:
+    kubernetes.io/arch: amd64 
   runPolicy: Serial
 ```
 
@@ -85,8 +85,8 @@ spec:
     to:
       kind: ImageStreamTag      
       name: 'github-runner:${BUILD_TAG}'     
-    nodeSelector:
-      kubernetes.io/arch: arm64
+  nodeSelector:
+    kubernetes.io/arch: arm64
   runPolicy: Serial
 ```
 
