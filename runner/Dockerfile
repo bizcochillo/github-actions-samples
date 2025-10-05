@@ -21,6 +21,7 @@ WORKDIR /home/runner
 # Runner download supports amd64 as x64
 RUN export ARCH=$(echo ${TARGET_PLATFORM} | cut -d / -f2) \
     && if [ "$ARCH" = "amd64" ]; then export ARCH=x64 ; fi \
+    && echo RUNNER_URL_ADDRESS=https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${ARCH}-${RUNNER_VERSION}.tar.gz \
     && curl -L -o runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${ARCH}-${RUNNER_VERSION}.tar.gz \
     && tar xzf ./runner.tar.gz \
     && rm runner.tar.gz \
