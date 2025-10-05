@@ -4,6 +4,9 @@ ARG TARGET_PLATFORM
 ARG RUNNER_VERSION=2.328.0
 ARG RUNNER_CONTAINER_HOOKS_VERSION=0.7.0
 
+# Shell setup
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # The UID env var should be used in child Containerfile.
 ENV UID=1000
 ENV GID=0
@@ -42,7 +45,6 @@ RUN dnf install -y \
 RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
 # Use an install script to install the `gh` cli, more about that below!
-COPY images/software/gh-cli.sh gh-cli.sh
 RUN yum-config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
 RUN yum install -y gh
 
