@@ -230,8 +230,8 @@ Specifically, we demonstrate a demanding scenario: configuring a runner on the R
 
 > **NOTE:** Host the Account ID and the region in an environment variable for executing the AWS scripts. The AWS CLI must be configured with the correct client id and client secret to access the target AWS account resources. 
 > ```bash
-export AWS_ACCOUNT=<YOUR_ADCCOUNT_ID_HERE>
-export AWS_REGION=<YOUR_RESOURCE_TARGET_REGION_HERE>
+>export AWS_ACCOUNT=<YOUR_ADCCOUNT_ID_HERE>
+>export AWS_REGION=<YOUR_RESOURCE_TARGET_REGION_HERE>
 > ```
 
 For this example, we create a secret named `github-sample` of type key/pair list and an item `SecretOfLife: To Be Happy` in the `eu-central-1` AWS region to be retrieved safely by the pipeline. 
