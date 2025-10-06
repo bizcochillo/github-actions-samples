@@ -1,0 +1,30 @@
+# values.yaml
+---
+template:
+  metadata:
+    annotations: 
+      github-actions-sample: arm
+  spec:
+    # ------------------ SCHEDULING CONFIGURATION ------------------
+    nodeSelector:
+      kubernetes.io/arch: arm64
+      node-type: graviton     
+    tolerations:
+      - key: "arch"
+        operator: "Equal"
+        value: "x86_64"
+        effect: "NoExecute"
+    # --------------------------------------------------------------
+    
+    containers:
+      - name: runner
+        image: ghcr.io/actions/actions-runner:latest
+        command: ["/home/runner/run.sh"]
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsNonRoot: true
+          runAsUser: 1001
+          runAsGroup: 123

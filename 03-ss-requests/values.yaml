@@ -1,0 +1,20 @@
+# values.yaml
+---
+template:
+  metadata:
+    annotations: 
+      github-actions-sample: requests
+  spec:
+    containers:
+      - name: runner
+        image: ghcr.io/actions/actions-runner:latest
+        command: ["/home/runner/run.sh"]
+        # ---------------- ADDED RESOURCES SECTION ----------------
+        resources:
+          requests:
+            memory: "200Mi"  # Guaranteed minimum: 500 MiB
+            cpu: "500m"      # Guaranteed minimum: 0.5 CPU core (500 millicores)
+          limits:
+            memory: "200Mi"  # Hard maximum: 500 MiB (Pod will be OOMKilled if exceeded)
+            cpu: "500m"      # Hard maximum: 0.5 CPU core (CPU will be throttled if exceeded)
+        # ---------------------------------------------------------   
