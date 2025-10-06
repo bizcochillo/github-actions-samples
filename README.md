@@ -681,6 +681,20 @@ jobs:
       name: Information about runner
 ```
 
+# Universal Base images
+
+```bash
+INSTALLATION_NAME="ghr-ss-ubi"
+NAMESPACE="arc-runners-ubi"
+helm install "${INSTALLATION_NAME}" \
+    --namespace "${NAMESPACE}" \
+    --create-namespace \
+    --set githubConfigUrl="${GITHUB_CONFIG_URL}" \
+    --set githubConfigSecret.github_token="${GITHUB_PAT}" \
+    -f ./05-ss-ubi/values.yaml \
+    oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
+```
+
 # Enable metrics
 
 - **Reference article**: [Enabling GitHub ARC Metrics - Ken Muse](https://www.kenmuse.com/blog/enabling-github-arc-metrics/)
