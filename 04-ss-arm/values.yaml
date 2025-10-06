@@ -3,8 +3,19 @@
 template:
   metadata:
     annotations: 
-      github-actions-sample: restricted-scc
+      github-actions-sample: arm
   spec:
+    # ------------------ SCHEDULING CONFIGURATION ------------------
+    nodeSelector:
+      kubernetes.io/arch: arm64
+      node-type: graviton     
+    tolerations:
+      - key: "arch"
+        operator: "Equal"
+        value: "x86_64"
+        effect: "NoExecute"
+    # --------------------------------------------------------------
+    
     containers:
       - name: runner
         image: ghcr.io/actions/actions-runner:latest
