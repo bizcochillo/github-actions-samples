@@ -681,7 +681,98 @@ jobs:
       name: Information about runner
 ```
 
-# Universal Base images
+# Universal Base images for runners
+
+Based on this [great article](https://some-natalie.dev/blog/kubernoodles-pt-5/) . 
+
+## Create an ARM Machine pool for Graviton instances
+```bash
+export CLUSTER_ID=_YOUR_CLUSTER_ID_HERE_
+rosa create machinepool \
+    --cluster=$CLUSTER_ID \
+    --name=graviton-pool \
+    --instance-type=m6g.xlarge \
+    --replicas=1 \
+    --labels="node-type=graviton" \
+    --taints="arch=x86_64:NoExecute"
+```
+
+## Create an ImageStream in the arc-systems namespace
+
+```yaml
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:  
+  name: github-runner
+  namespace: arc-systems
+spec:
+  lookupPolicy:
+    local: false
+```
+
+## Create BuildConfig objects for the runner ContainerFile
+
+```yaml
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: runner-x64
+  namespace: arc-systems
+  labels:
+    app: github-arc-runner
+spec:  
+  strategy:
+    type: Docker
+    dockerStrategy:      
+      buildArgs:
+        # This must be set to 'x86_64' or 'arm64'.
+        - name: TARGET_PLATFORM
+          value: "x86_64"        
+  source:
+    type: Git
+    git:      
+      uri: 'https://github.com/bizcochillo/github-actions-samples'
+      ref: 'feature/initial-documentation'    
+    contextDir: 'runner'
+  output:
+    to:
+      kind: ImageStreamTag      
+      name: 'github-runner:runner-x86-64'
+  nodeSelector:
+    kubernetes.io/arch: amd64 
+  runPolicy: Serial
+```
+
+```yaml
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: runner-arm64
+  namespace: arc-systems
+  labels:
+    app: github-arc-runner
+spec:  
+  strategy:
+    type: Docker
+    dockerStrategy:      
+      buildArgs:
+        # This must be set to 'x86_64' or 'arm64'.
+        - name: TARGET_PLATFORM
+          value: "arm64"
+  source:
+    type: Git
+    git:      
+      uri: 'https://github.com/bizcochillo/github-actions-samples'
+      ref: 'feature/initial-documentation'    
+    contextDir: 'runner'
+  output:
+    to:
+      kind: ImageStreamTag      
+      name: 'github-runner:runner-arm64'     
+  nodeSelector:
+    kubernetes.io/arch: arm64
+  runPolicy: Serial
+```
 
 ```bash
 INSTALLATION_NAME="ghr-ss-ubi"
