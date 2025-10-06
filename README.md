@@ -695,6 +695,19 @@ helm install "${INSTALLATION_NAME}" \
     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 ```
 
+Add image puller permissions and github-arc SCC
+```bash
+# For pulling images
+oc policy add-role-to-user system:image-puller \
+    system:serviceaccount:${NAMESPACE}:${INSTALLATION_NAME}-gha-rs-no-permission \
+    --namespace=arc-systems
+# For github-arc SCC
+oc policy add-role-to-user \
+   system:openshift:scc:github-arc \
+   -z ${INSTALLATION_NAME}-gha-rs-no-permission \
+   -n ${NAMESPACE}
+```
+
 # Enable metrics
 
 - **Reference article**: [Enabling GitHub ARC Metrics - Ken Muse](https://www.kenmuse.com/blog/enabling-github-arc-metrics/)
