@@ -685,18 +685,6 @@ jobs:
 
 Based on this [great article](https://some-natalie.dev/blog/kubernoodles-pt-5/) . 
 
-## Create an ARM Machine pool for Graviton instances
-```bash
-export CLUSTER_ID=_YOUR_CLUSTER_ID_HERE_
-rosa create machinepool \
-    --cluster=$CLUSTER_ID \
-    --name=graviton-pool \
-    --instance-type=m6g.xlarge \
-    --replicas=1 \
-    --labels="node-type=graviton" \
-    --taints="arch=x86_64:NoExecute"
-```
-
 ## Create an ImageStream in the arc-systems namespace
 
 ```yaml
