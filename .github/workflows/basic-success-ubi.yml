@@ -9,3 +9,6 @@ jobs:
     - run: echo "🎉 This job uses runner scale set runners(basic)!"
     - run: echo "--- AGENT INFORMATION ---" && cat /etc/os-release && echo "---" && echo "--- ARCHITECTURE ---" && arch
       name: Information about runner
+    - run: aws --version
+    - run: go version
+    - run: stress --version
