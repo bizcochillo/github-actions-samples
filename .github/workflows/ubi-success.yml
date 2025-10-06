@@ -1,0 +1,11 @@
+name: ARC sample (restricted SCC - UBI) - success
+on:
+  workflow_dispatch:
+
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ghr-ss-ubi
+    steps:
+    - run: echo "🎉 This job uses runner scale set runners(basic)!"
+    - run: echo "--- AGENT INFORMATION ---" && cat /etc/os-release && echo "---" && echo "--- ARCHITECTURE ---" && arch
+      name: Information about runner
