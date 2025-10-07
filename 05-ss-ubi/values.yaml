@@ -7,7 +7,7 @@ template:
   spec:
     containers:
       - name: runner
-        image: image-registry.openshift-image-registry.svc:5000/arc-systems/github-runner:runner-x86-64
+        image: image-registry.openshift-image-registry.svc:5000/arc-systems/github-runner:x86-64
         command: ["/home/runner/run.sh"]
         securityContext:
           allowPrivilegeEscalation: false

@@ -725,7 +725,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag      
-      name: 'github-runner:runner-x86-64'
+      name: 'github-runner:x86-64'
   nodeSelector:
     kubernetes.io/arch: amd64 
   runPolicy: Serial
@@ -740,25 +740,25 @@ metadata:
   labels:
     app: github-arc-runner
 spec:  
-  strategy:
-    type: Docker
-    dockerStrategy:      
-      buildArgs:
-        # This must be set to 'x86_64' or 'arm64'.
-        - name: TARGET_PLATFORM
-          value: "arm64"
-  source:
-    type: Git
-    git:      
-      uri: 'https://github.com/bizcochillo/github-actions-samples'
-      ref: 'feature/initial-documentation'    
-    contextDir: 'runner'
+  nodeSelector:
+    kubernetes.io/arch: amd64
   output:
     to:
-      kind: ImageStreamTag      
-      name: 'github-runner:runner-arm64'     
-  nodeSelector:
-    kubernetes.io/arch: arm64
+      kind: ImageStreamTag
+      name: 'github-runner:x86-64'  
+  strategy:
+    type: Docker
+    dockerStrategy:
+      # This must be set to 'x86_64' or 'arm64'.
+      buildArgs:
+        - name: TARGET_PLATFORM
+          value: x86_64
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/bizcochillo/github-actions-samples'
+      ref: main
+    contextDir: runner
   runPolicy: Serial
 ```
 
