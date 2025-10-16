@@ -720,7 +720,7 @@ spec:
     type: Git
     git:      
       uri: 'https://github.com/bizcochillo/github-actions-samples'
-      ref: 'feature/initial-documentation'    
+      ref: 'main'    
     contextDir: 'runner'
   output:
     to:
